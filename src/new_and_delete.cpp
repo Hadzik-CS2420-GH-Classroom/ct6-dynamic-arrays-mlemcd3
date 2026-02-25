@@ -21,10 +21,6 @@ void newAndDelete() {
 
     int size = 5;
 
-    // TODO: Use 'new' to allocate an array of 'size' ints on the heap
-    //       Store the result in int* called 'heapArray'
-    //       Hint: int* heapArray = new int[size];
-    //
     // ! DISCUSSION: What does 'new int[size]' actually do?
     //   1. Asks the OS for (size * sizeof(int)) bytes of heap memory
     //   2. Returns a pointer to the first element of that block
@@ -43,22 +39,25 @@ void newAndDelete() {
     //   function. new int[size] is the portable, standard way to
     //   create a runtime-sized array.
 
-    // TODO: Use a for loop to fill the array with values 10, 20, 30, 40, 50
-    //       Hint: heapArray[i] = (i + 1) * 10;
+    int* heapArray = new int[size];
+    for (int i = 0; i < size; i++) {
+        heapArray[i] = (i + 1) * 10;
+    }
 
-    // TODO: Print all elements of the heap array using a for loop
-    // Expected output: "Heap array: 10 20 30 40 50"
     std::cout << "Heap array: ";
 
     // your loop here
-
+    for (int i = 0; i < size; i++) {
+        std::cout << heapArray[i] << " ";
+    }
     std::cout << '\n';
 
     // --- 2. Freeing arrays with delete[] ---
     // ? SEE DIAGRAM: images/delete_and_nullptr.png — shows what happens to the pointer after delete[]
     std::cout << "\n--- 2. Freeing Arrays with delete[] ---" << '\n';
 
-    // TODO: Use 'delete[]' to free the heap array
+    delete[] heapArray;
+
     //
     // ! DISCUSSION: Why must we call delete[]?
     //   Unlike stack variables, heap memory is NOT automatically freed.
@@ -75,7 +74,7 @@ void newAndDelete() {
     //   delete[] knows how many elements to free because the allocator
     //   stores the count (usually just before the array in memory).
 
-    // TODO: Set heapArray to nullptr after deleting
+    heapArray = nullptr;
     //
     // ! DISCUSSION: Why set to nullptr after delete[]?
     //   After delete[], the pointer still holds the old address — it's
@@ -115,8 +114,7 @@ void newAndDelete() {
     //        array we'll build in the future require understanding allocation
     //        at this level — it's the foundation everything else sits on
 
-    // TODO: Create a std::unique_ptr<int> called 'smartValue' using std::make_unique<int>(99)
-    //
+    auto smartValue = std::make_unique<int>(99);
     // ! DISCUSSION: What does 'auto' mean here?
     //   auto tells the compiler: "figure out the type for me."
     //   The right-hand side is std::make_unique<int>(99), which returns a
@@ -139,25 +137,28 @@ void newAndDelete() {
     //   2. Exception-safe — no risk of leaking if another argument throws
     //   3. Makes the intent clear: "I want a unique_ptr"
 
-    // TODO: Print the value by dereferencing the unique_ptr (use * just like a raw pointer)
     // Expected output: "Smart value: 99"
+    std::cout << "Smart value: " << *smartValue << "\n";
 
-    // TODO: Create a unique_ptr to a dynamic array of 3 ints
-    //       Hint: auto smartArray = std::make_unique<int[]>(3);
-    //
+    auto smartArray = std::make_unique<int[]>(3);
+
+    smartArray[0] = 100;
+    smartArray[1] = 200;
+    smartArray[2] = 300;
+
+
     // ! DISCUSSION: unique_ptr with arrays
     //   std::make_unique<int[]>(3) allocates an array of 3 ints on the heap.
     //   The unique_ptr knows it's an array and will call delete[] (not delete)
     //   when it goes out of scope. You can use [] indexing on it.
 
-    // TODO: Fill the smart array with values 100, 200, 300
-    //       Hint: smartArray[0] = 100; etc.
-
-    // TODO: Print all elements of the smart array
     // Expected output: "Smart array: 100 200 300"
     std::cout << "Smart array: ";
 
-    // your loop here
+    for (int i = 0; i < 3; i++) {
+        std::cout << smartArray [i] << " ";
+    }
+
 
     std::cout << '\n';
 
@@ -189,9 +190,11 @@ void newAndDelete() {
     //   ownership of the same object.
 
     // TODO: Create a shared_ptr<int> called 'sharedA' using std::make_shared<int>(77)
+    std::shared_ptr<int> sharedA = std::make_shared<int>(77);
 
     // TODO: Create a second shared_ptr<int> called 'sharedB' that copies sharedA
     //       Hint: auto sharedB = sharedA;
+    auto sharedB = sharedA;
     //
     // ! DISCUSSION: How does shared_ptr allow copies?
     //   shared_ptr keeps a reference count. When you copy it, the count
@@ -203,10 +206,9 @@ void newAndDelete() {
     //   atomic increment/decrement is needed).
 
     // TODO: Print the value through both pointers and the reference count
-    // Expected output: "sharedA value: 77"
-    // Expected output: "sharedB value: 77"
-    // Expected output: "Reference count: 2"
-    //       Hint: use sharedA.use_count() for the reference count
+    std::cout << "sharedA value: " << *sharedA << "\n";
+    std::cout << "sharedB value: " << *sharedB << "\n";
+    std::cout << "Reference count: " << sharedA.use_count()<< "\n";
 
     std::cout << "Both pointers share the same heap memory!" << '\n';
 }

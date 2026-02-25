@@ -47,14 +47,22 @@ void dynamicArrays() {
 
     // TODO: Allocate a dynamic array of 'capacity' ints on the heap
     //       Store it in int* called 'arr'
+    int* arr = new int[capacity];
 
     std::cout << "Empty array created";
     // TODO: Call printArray(arr, count, capacity) to display the state
     // Expected output: "Empty array created  [](count=0, capacity=4)"
+    printArray(arr, count, capacity);
 
     // --- 2. Adding elements ---
     std::cout << "\n--- 2. Adding Elements ---" << '\n';
 
+    arr[count] = 10;
+    count++;
+    arr[count] = 20;
+    count++;
+    arr[count] = 30;
+    count++;
     // TODO: Add the value 10 to the array at index 'count', then increment count
     //       Hint: arr[count] = 10; count++;
     // TODO: Add 20 the same way
@@ -63,11 +71,15 @@ void dynamicArrays() {
     std::cout << "After adding 10, 20, 30:";
     // TODO: Call printArray to display the state
     // Expected output: "After adding 10, 20, 30:  [10, 20, 30]  (count=3, capacity=4)"
+    printArray(arr, count, capacity);
 
     // TODO: Add 40 to fill the array to capacity
+    arr[count] = 40;
+    count++;
 
     std::cout << "After adding 40 (full!):";
     // TODO: Call printArray to display the state
+    printArray(arr, count, capacity);
     // Expected output: "After adding 40 (full!):  [10, 20, 30, 40]  (count=4, capacity=4)"
 
     // ! DISCUSSION: Now count == capacity. The array is full!
@@ -98,13 +110,19 @@ void dynamicArrays() {
 
     // Step 1: Double the capacity
     // TODO: Set a new variable 'newCapacity' to capacity * 2
+    int newCapacity = capacity * 2;
+    std::cout << "New capacity: " << newCapacity << '\n';
     // Expected output: "New capacity: 8"
 
     // Step 2: Allocate a new, bigger array
+    int* newArr = new int[newCapacity];
     // TODO: Allocate a new array of 'newCapacity' ints
     //       Store it in int* called 'newArr'
 
     // Step 3: Copy existing elements from old to new
+    for (int i = 0; i < capacity; ++i) {
+        newArr[i] = arr[i];
+    }
     // TODO: Use a for loop to copy arr[i] to newArr[i] for each existing element
     //
     // ! DISCUSSION: Why use a loop instead of a bulk copy?
@@ -116,6 +134,7 @@ void dynamicArrays() {
     std::cout << "Copied " << count << " elements to new array" << '\n';
 
     // Step 4: Delete the old array
+    delete arr;
     // TODO: delete[] the old array (arr)
     //
     // ! DISCUSSION: Why must we delete the OLD array?
@@ -124,6 +143,8 @@ void dynamicArrays() {
     //   newArr without deleting, the old memory leaks.
 
     // Step 5: Update the pointer and capacity
+    arr = newArr;
+    capacity = newCapacity;
     // TODO: Point arr to newArr (arr = newArr)
     // TODO: Update capacity to newCapacity
     //
@@ -139,15 +160,23 @@ void dynamicArrays() {
     //   accidentally use it later — newArr just falls out of scope.
 
     std::cout << "Resized!";
+    printArray(arr, count, capacity);
     // TODO: Call printArray to display the state
     // Expected output: "Resized!  [10, 20, 30, 40]  (count=4, capacity=8)"
 
     // --- 4. Adding more elements after resize ---
     std::cout << "\n--- 4. Adding After Resize ---" << '\n';
 
+    arr[count] = 50;
+    count++;
+    arr[count] = 60;
+    count++;
+    arr[count] = 70;
+    count++;
     // TODO: Add 50, 60, 70 to the array (same pattern: arr[count] = value; count++)
 
     std::cout << "After adding 50, 60, 70:";
+    printArray(arr, count, capacity);
     // TODO: Call printArray to display the state
     // Expected output: "After adding 50, 60, 70:  [10, 20, 30, 40, 50, 60, 70]  (count=7, capacity=8)"
 
@@ -159,6 +188,8 @@ void dynamicArrays() {
     std::cout << "\n--- 5. Cleanup ---" << '\n';
 
     // TODO: delete[] arr and set to nullptr
+    delete[] arr;
+    arr = nullptr;
 
     std::cout << "Dynamic array freed" << '\n';
 

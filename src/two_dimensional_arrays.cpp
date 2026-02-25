@@ -48,6 +48,22 @@ void twoDimensionalArrays() {
 
     // ? SEE DIAGRAM: images/two_d_spine.png — what the spine allocation looks like
     //
+
+    int** table = new int*[rows];
+    for (int i = 0; i < rows; i++) {
+        table[i] = new int[cols];
+        for (int j = 0; j < cols; j++) {
+            table[i][j] = (i * cols) + j + 1;
+        }
+    }
+
+    for (int i = 0; i < rows; i++) {
+        std::cout << "Row " << i << ": ";
+        for (int j = 0; j < cols; j++) {
+            std::cout << table[i][j] << " ";
+        }
+        std::cout << "\n";
+    }
     // TODO: Allocate an array of int* pointers with 'rows' elements
     //       Store it in int** called 'table'
     //       Hint: int** table = new int*[rows];
@@ -85,6 +101,11 @@ void twoDimensionalArrays() {
     std::cout << "\n--- 3. Freeing a Dynamic 2D Array ---" << '\n';
 
     // TODO: Use a for loop to delete[] each row first
+    for (int i = 0; i < rows; i++) {
+        delete[] table[i];
+    }
+    delete[] table;
+    table = nullptr;
     //
     // ! DISCUSSION: Why delete rows before the spine?
     //   If we delete the spine (table) first, we lose the pointers to
@@ -110,10 +131,16 @@ void twoDimensionalArrays() {
     //     index = row * cols + col
     //   This gives contiguous memory, one allocation, one delete[].
 
+    int* flat = new int[rows * cols];
     // TODO: Allocate a single flat array of size rows * cols
     //       Store it in int* called 'flat'
     //       Hint: int* flat = new int[rows * cols];
 
+    for (int r = 0; r < rows; ++r) {
+        for (int c = 0; c < cols; ++c) {
+            flat[r * cols + c] = (r * cols) + c + 1;
+        }
+    }
     // TODO: Fill it using flat[r * cols + c] = (r * cols) + c + 1
     //       Same values as before: 1 through 12
 
@@ -125,8 +152,18 @@ void twoDimensionalArrays() {
     //     Row 2: 9 10 11 12
     std::cout << "Flat array as 2D:" << '\n';
 
-    // your nested loops here
 
+    for (int r = 0; r < rows; ++r) {
+        std::cout<< "  Row " << r << ": ";
+        for (int c = 0; c < cols; ++c) {
+            std::cout << flat[r * cols + c] << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    // your nested loops here
+    delete[] flat;
+    flat = nullptr;
     // TODO: Free the flat array with delete[] and set to nullptr
 
     std::cout << "Flat array freed (just one delete[]!)" << '\n';
